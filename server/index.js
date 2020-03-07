@@ -16,7 +16,7 @@ app.post('/repos', function (req, res) {
       res.sendStatus(500);
     } else {
       var toInsert = data.map((repo) => database.save(dbify(repo)));
-      Promise.allSettled(toInsert)
+      Promise.all(toInsert)
         .then(() => {
           console.log('====Saved to Mongo with no duplicates.===')
           res.sendStatus(201);
@@ -26,8 +26,16 @@ app.post('/repos', function (req, res) {
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+  console.log('Received GET request.');
+  database.grab()
+    .then((result) => {
+      console.log('======the result====', result);
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      console.log('======error====', err);
+      res.sendStatus(500);
+    });
 });
 
 let port = 1128;

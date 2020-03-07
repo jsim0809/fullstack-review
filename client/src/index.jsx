@@ -20,13 +20,34 @@ class App extends React.Component {
       method: 'POST',
       data: term,
       success: (() => {
-        console.log('======= Successfuly sent POST request and received a response. =======');
+        console.log('Successfuly sent POST request. Sending GET request.');
+        this.fetch();
       }),
       error: ((err) => {
-        console.log('======= Sent POST request but received an error response. =======', err);
+        console.log('Sent POST request but server returned an error.');
       })
     });
   }
+
+
+  fetch () {
+    $.ajax({
+      url: '/repos',
+      method: 'GET',
+      success: ((data) => {
+        console.log('Successfuly sent GET request. Refreshing data.');
+        this.updateState(data);
+      }),
+      error: ((err) => {
+        console.log('Sent GET request but server returned an error.');
+      })
+    });
+  }
+
+  updateState (data) {
+    this.setState({ repos: data });
+  }
+
 
   render () {
     return (<div>
