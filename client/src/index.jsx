@@ -48,6 +48,9 @@ class App extends React.Component {
     this.setState({ repos: data });
   }
 
+  componentDidMount () {
+    this.fetch();
+  }
 
   render () {
     return (<div>
