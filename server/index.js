@@ -8,7 +8,7 @@ const database = require('../database');
 app.use(express.static(__dirname + '/../client/dist'));
 
 app.use(bodyparser.urlencoded({ extended: false }));
-app.use(bodyparser.json());
+app.use(express.json());
 
 
 app.post('/repos', function (req, res) {
@@ -16,7 +16,10 @@ app.post('/repos', function (req, res) {
     if (err) {
       res.sendStatus(500);
     } else {
-      var toInsert = data.map((repo) => database.save(dbify(repo)));
+      var toInsert = data.map((repo) => {
+        console.log('========Hope', dbify(repo));
+        return database.save(dbify(repo));
+      });
       Promise.all(toInsert)
         .then(() => {
           console.log('====Saved to Mongo with no duplicates.===')
@@ -30,11 +33,9 @@ app.get('/repos', function (req, res) {
   console.log('Received GET request.');
   database.grab()
     .then((result) => {
-      console.log('======the result====', result);
       res.status(200).send(result);
     })
     .catch((err) => {
-      console.log('======error====', err);
       res.sendStatus(500);
     });
 });
@@ -54,8 +55,8 @@ var dbify = (githubObj) => {
   return {
     name: githubObj.name,
     owner_login: githubObj.owner.login,
-    owner_avatar_url: githubObj.owner_avatar_url,
-    owner_html_url: githubObj.owner_html_url,
+    owner_avatar_url: githubObj.owner.avatar_url,
+    owner_html_url: githubObj.owner.html_url,
     html_url: githubObj.html_url,
     forks_count: githubObj.forks_count,
     stargazers_count: githubObj.stargazers_count,

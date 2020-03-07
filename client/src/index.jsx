@@ -35,7 +35,7 @@ class App extends React.Component {
       url: '/repos',
       method: 'GET',
       success: ((data) => {
-        console.log('Successfuly sent GET request. Refreshing data.');
+        console.log('Successfuly sent GET request. Refreshing data with: ', data);
         this.updateState(data);
       }),
       error: ((err) => {
