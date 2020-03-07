@@ -16,14 +16,14 @@ class App extends React.Component {
   search (term) {
     console.log(`${term} was searched`);
     $.ajax({
-      uri: '127.0.0.1:1128/repos',
+      url: '/repos',
       method: 'POST',
-      body: term,
+      data: term,
       success: (() => {
         console.log('======= Successfuly sent POST request and received a response. =======');
       }),
-      error: (() => {
-        console.log('======= Sent POST request but received an error response. =======');
+      error: ((err) => {
+        console.log('======= Sent POST request but received an error response. =======', err);
       })
     });
   }
